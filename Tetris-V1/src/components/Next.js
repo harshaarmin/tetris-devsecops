@@ -10,7 +10,7 @@ export const Next = (props) => {
     }, [props.next])
 
     const tetrominos = next?.tetrominos();
-    const matrix = tetrominos ? createMatrix(tetrominos) : "";
+    const matrix = tetrominos ? createMatrix(tetrominos, styles) : "";
 
     return (
         <div>

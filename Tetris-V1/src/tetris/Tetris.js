@@ -1,9 +1,9 @@
 import {createState} from "./State.js";
 
 
-const createTetris = ({height, width} = {height: 20, width:10}) => {
-    const _height = height;
-    const _width = width;
+const createTetris = (dimensions) => {
+    const _height = dimensions?.height ?? 20;
+    const _width = dimensions?.width ?? 10;
     const state = createState(_height, _width);
     let timer = null;
     const stateChangeListeners = [];
