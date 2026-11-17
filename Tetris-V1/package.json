@@ -36,7 +36,10 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
+    "devDependencies": {
     "css-loader": "^4.3.0"
+  },
+  "overrides": {
+    "@babel/traverse": "^7.23.2"
   }
 }
