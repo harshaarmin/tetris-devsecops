@@ -48,7 +48,7 @@ pipeline {
                     )]) {
                         dependencyCheck(
                             odcInstallation: 'DP-Check',
-                            additionalArguments: "--scan . --format XML --disableYarnAudit --nvdApiKey ${NVD_API_KEY} --nvdApiDelay 8000 --nvdMaxRetryCount 15"
+                            additionalArguments: "--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiKey ${NVD_API_KEY} --nvdApiDelay 8000 --nvdMaxRetryCount 15"
                         )
                     }
 

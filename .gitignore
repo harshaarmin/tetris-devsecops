@@ -16,3 +16,6 @@ npm-debug.log*
 
 # OS files
 .DS_Store
+
+# Generated security scan reports
+Tetris-V1/dependency-check-report.xml

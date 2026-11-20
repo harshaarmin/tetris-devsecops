@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+
+    <!--
+        CVE-2023-29827 is disputed by the EJS maintainer.
+        The advisory describes EJS 3.1.9, while this project
+        uses EJS 3.1.10. Suppression is limited to this CVE.
+        Other EJS vulnerabilities remain detectable.
+    -->
+    <suppress>
+        <notes><![CDATA[
+        Disputed advisory. Installed EJS version is 3.1.10.
+        See https://github.com/mde/ejs/blob/main/SECURITY.md#out-of-scope-vulnerabilities
+        ]]></notes>
+        <packageUrl regex="true">^pkg:npm/ejs@3\.1\.10$</packageUrl>
+        <vulnerabilityName>CVE-2023-29827</vulnerabilityName>
+    </suppress>
+
+</suppressions>
