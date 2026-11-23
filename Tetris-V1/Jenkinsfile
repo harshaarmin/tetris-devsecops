@@ -49,25 +49,22 @@ pipeline {
             }
         }
 
-        stage('OWASP Dependency-Check') {
-            steps {
-                dir('Tetris-V1') {
-                    withCredentials([string(
-                        credentialsId: 'nvd-api-key',
-                        variable: 'NVD_API_KEY'
-                    )]) {
-                        dependencyCheck(
-                            odcInstallation: 'DP-Check',
-                            additionalArguments: "--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiKey ${NVD_API_KEY} --nvdApiDelay 8000 --nvdMaxRetryCount 15"
-                        )
-                    }
+        
+         stage('OWASP Dependency-Check') {
+             steps {
+               dir('Tetris-V1') {
+                  dependencyCheck(
+                  odcInstallation: 'DP-Check',
+                  nvdCredentialsId: 'nvd-api-key',
+                additionalArguments: '--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiDelay 8000 --nvdMaxRetryCount 15'
+            )
 
-                    dependencyCheckPublisher(
-                        pattern: '**/dependency-check-report.xml'
-                    )
-                }
-            }
+            dependencyCheckPublisher(
+                pattern: '**/dependency-check-report.xml'
+            )
         }
+    }
+}
 
         stage('Trivy Filesystem Scan') {
             steps {
