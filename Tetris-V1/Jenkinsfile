@@ -58,6 +58,19 @@ pipeline {
                 }
             }
         }
+
+        stage('Trivy Filesystem Scan') {
+            steps {
+                dir('Tetris-V1') {
+                    sh '''
+                        trivy fs \
+                            --scanners vuln \
+                            --include-dev-deps \
+                            --format table \
+                            .
+                    '''
+                }
+            }
+        }
     }
 }
-
