@@ -20,6 +20,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 dir('Tetris-V1') {
+                    sh 'node -v'
+                    sh 'npm -v'
                     sh 'npm ci'
                 }
             }
