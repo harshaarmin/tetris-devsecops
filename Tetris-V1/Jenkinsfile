@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -49,22 +48,20 @@ pipeline {
             }
         }
 
-        
-         stage('OWASP Dependency-Check') {
-             steps {
-               dir('Tetris-V1') {
-                  dependencyCheck(
-                  odcInstallation: 'DP-Check',
-                  nvdCredentialsId: 'nvd-api-key',
-                additionalArguments: '--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiDelay 8000 --nvdMaxRetryCount 15'
-            )
-
-            dependencyCheckPublisher(
-                pattern: '**/dependency-check-report.xml'
-            )
+        stage('OWASP Dependency-Check') {
+            steps {
+                dir('Tetris-V1') {
+                    dependencyCheck(
+                        odcInstallation: 'DP-Check',
+                        nvdCredentialsId: 'nvd-api-key',
+                        additionalArguments: '--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiDelay 8000 --nvdMaxRetryCount 15'
+                    )
+                    dependencyCheckPublisher(
+                        pattern: '**/dependency-check-report.xml'
+                    )
+                }
+            }
         }
-    }
-}
 
         stage('Trivy Filesystem Scan') {
             steps {
@@ -76,6 +73,14 @@ pipeline {
                             --format table \
                             .
                     '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('Tetris-V1') {
+                    sh 'docker build -t tetris-app:local .'
                 }
             }
         }
