@@ -1,0 +1,13 @@
+
+node_modules
+build
+.git
+.gitignore
+.github
+.env
+.env.*
+!.env.example
+npm-debug.log*
+.DS_Store
+dependency-check-report.xml
+npm-audit.json

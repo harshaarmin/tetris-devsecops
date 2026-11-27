@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -17,6 +16,16 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                dir('Tetris-V1') {
+                    sh 'node -v'
+                    sh 'npm -v'
+                    sh 'npm ci'
+                }
+            }
+        }
+
         stage('SonarQube Analysis') {
             steps {
                 dir('Tetris-V1') {
@@ -31,25 +40,62 @@ pipeline {
             }
         }
 
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+
         stage('OWASP Dependency-Check') {
             steps {
                 dir('Tetris-V1') {
-                    withCredentials([string(
-                        credentialsId: 'nvd-api-key',
-                        variable: 'NVD_API_KEY'
-                    )]) {
-                        dependencyCheck(
-                            odcInstallation: 'DP-Check',
-                          additionalArguments: "--scan . --format XML --nvdApiKey ${NVD_API_KEY} --nvdApiDelay 8000 --nvdMaxRetryCount 15" 
-                        )
-                    }
-
+                    dependencyCheck(
+                        odcInstallation: 'DP-Check',
+                        nvdCredentialsId: 'nvd-api-key',
+                        additionalArguments: '--scan . --format XML --disableYarnAudit --suppression dependency-check-suppressions.xml --nvdApiDelay 8000 --nvdMaxRetryCount 15'
+                    )
                     dependencyCheckPublisher(
                         pattern: '**/dependency-check-report.xml'
                     )
                 }
             }
         }
+
+        stage('Trivy Filesystem Scan') {
+            steps {
+                dir('Tetris-V1') {
+                    sh '''
+                        trivy fs \
+                            --scanners vuln \
+                            --include-dev-deps \
+                            --format table \
+                            .
+                    '''
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                dir('Tetris-V1') {
+                    sh 'docker build -t tetris-app:local .'
+                }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                    docker rm -f tetris-app-local || true
+                    docker run -d \
+                        --name tetris-app-local \
+                        --restart unless-stopped \
+                        -p 3000:80 \
+                        tetris-app:local
+                '''
+            }
+        }
     }
 }
-

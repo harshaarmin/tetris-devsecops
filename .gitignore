@@ -17,6 +17,10 @@ npm-debug.log*
 # OS files
 .DS_Store
 
+# Generated security scan reports
+Tetris-V1/dependency-check-report.xml
+Tetris-V1/npm-audit.json
+
 # Terraform state, plans and keys
 *.tfstate
 *.tfstate.*
