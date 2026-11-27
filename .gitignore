@@ -20,3 +20,11 @@ npm-debug.log*
 # Generated security scan reports
 Tetris-V1/dependency-check-report.xml
 Tetris-V1/npm-audit.json
+
+# Terraform state, plans and keys
+*.tfstate
+*.tfstate.*
+.terraform/
+*.tfplan
+*.pem
+*.key
